@@ -1,4 +1,4 @@
-### Please add a brief description that explains the purpose of this pull request
+#### Please add a brief description that explains the purpose of this pull request
 
 - [ ] Have you linked the Linear issue?
 
@@ -10,4 +10,4 @@
 
 - [ ] Has this PR been tested in a deployed environment? If not, why? 
 
-### Please explain the worst scenario that could happen from this pull request?
+###$ Please explain the worst scenario that could happen from this pull request?
