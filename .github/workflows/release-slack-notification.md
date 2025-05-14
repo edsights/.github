@@ -21,7 +21,7 @@ jobs:
                   "color": "#145aff",
                   "title": "${{ github.event.release.name }}",
                   "title_link": "${{ github.event.release.html_url }}",
-                  "text": "${{ github.event.release.body }}",
+                  "text": ${{ toJson(github.event.release.body) }},
                   "footer": "GitHub Releases",
                   "footer_icon": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
                 }
