@@ -3,7 +3,7 @@ name: Post Release to Slack
 on:
   workflow_call:
     secrets:
-      SLACK_WEBHOOK_URL:
+      SLACK_WEBHOOK_URL_RELEASES:
         required: true
 
 jobs:
@@ -28,5 +28,5 @@ jobs:
               ]
             }
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_RELEASES }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
