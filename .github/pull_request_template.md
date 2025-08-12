@@ -10,6 +10,6 @@
 
 - [ ] Have you confirmed this change in a deployed environment? If not, why?
 
-- [ ] Have you requested a copilot review on this PR?
+- [ ] Have you requested a copilot review?
 
 #### Briefly explain the worst scenario that could happen from this pull request
