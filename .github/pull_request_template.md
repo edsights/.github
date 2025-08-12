@@ -8,6 +8,8 @@
 
 - [ ] Have you confirmed if environment variables need to be added/modified?
 
-- [ ] Have you confirmed this change in a deployed environment? If not, why? 
+- [ ] Have you confirmed this change in a deployed environment? If not, why?
+
+- [ ] Have you requested a copilot review on this PR?
 
 #### Briefly explain the worst scenario that could happen from this pull request
