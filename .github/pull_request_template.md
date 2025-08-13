@@ -1,13 +1,15 @@
-#### Please add a brief description that explains the purpose of this pull request
+#### Briefly explain the purpose and context of this pull request
 
 - [ ] Have you linked the Linear issue?
 
-- [ ] Have you checked if the README needs to be updated?
+- [ ] Have you checked if the README or Notion docs need to be updated?
 
-- [ ] Did you write tests for this change? If not, why?
+- [ ] Have you reviewed if tests need to be added/modified? If not, why?
 
-- [ ] Does this change require environment variables to be added/modified?
+- [ ] Have you confirmed if environment variables need to be added/modified?
 
-- [ ] Has this change been tested in a deployed environment? If not, why? 
+- [ ] Have you confirmed this change in a deployed environment? If not, why?
 
-#### Please explain the worst scenario that could happen from this pull request?
+- [ ] Have you requested a copilot review?
+
+#### Briefly explain the worst scenario that could happen from this pull request
