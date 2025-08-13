@@ -4,7 +4,7 @@
 
 - [ ] Have you checked if the README or Notion docs need to be updated?
 
-- [ ] Have you reviewed if unit tests need to be added/modified? If not, why?
+- [ ] Have you reviewed if tests need to be added/modified? If not, why?
 
 - [ ] Have you confirmed if environment variables need to be added/modified?
 
