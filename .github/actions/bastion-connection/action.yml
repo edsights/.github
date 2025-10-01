@@ -30,6 +30,10 @@ inputs:
 runs:
   using: composite
   steps:
+    - run: |
+        pwd
+        ls -la
+      shell: bash
     - name: Setup & Authenticate gCloud CLI
       uses: ./.github/actions/setup-gcloud
       with:
