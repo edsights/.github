@@ -1,0 +1,49 @@
+name: Bastion Connection
+description: Setup a SSH tunnel to the Bastion host
+
+inputs:
+  gcp-project-id:
+    description: GCP Project ID
+    required: true
+    type: string
+  bastion-zone:
+    description: GCP Bastion Zone
+    default: us-central1-a
+    type: string
+  db-pvt-ip:
+    description: Private IP of the DB instance
+    required: true
+    type: string
+  proxy-port:
+    description: Local port to use for the proxy
+    default: 5435
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Install Dependencies
+      run: |
+        apt-get update && apt-get install -y netcat-openbsd net-tools
+
+    - name: Setup SSH tunnel to bastion
+      run: |
+        gcloud beta compute ssh bastion-830f7 \
+          --project ${{ inputs.gcp-project-id }} \
+          --zone ${{ inputs.bastion-zone }} \
+          --ssh-flag="-NL" \
+          --ssh-flag="0.0.0.0:${{ env.proxy-port }}:${{ inputs.db-pvt-ip }}:5432" \
+          --ssh-flag="-v" \
+          --ssh-flag="-o" \
+          --ssh-flag="StrictHostKeyChecking=no" \
+          --ssh-flag="-o" \
+          --ssh-flag="UserKnownHostsFile=/dev/null" &
+
+        SSH_PID=$!
+        echo "SSH_PID=$SSH_PID" >> $GITHUB_ENV
+        
+        echo "Wait for tunnel to establish..."
+        sleep 10
+        
+        echo "Test if tunnel is working"
+        timeout 5 bash -c 'until nc -z localhost 5435; do sleep 1; done' && echo "Bastion Tunnel established"
