@@ -31,7 +31,7 @@ runs:
   using: composite
   steps:
     - name: Setup & Authenticate gCloud CLI
-      uses: edsights/.github/.github/actions/setup-gcloud@ENG-1052
+      uses: edsights/.github/.github/actions/setup-gcloud
       with:
         wl-id-provider: ${{ inputs.wl-id-provider }}
         service-account: ${{ inputs.service-account }}
