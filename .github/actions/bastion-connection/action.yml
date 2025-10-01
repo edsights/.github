@@ -30,12 +30,8 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: |
-        pwd
-        ls -la
-      shell: bash
     - name: Setup & Authenticate gCloud CLI
-      uses: ./.github/actions/setup-gcloud
+      uses: edsights/.github/.github/actions/setup-gcloud@ENG-1052
       with:
         wl-id-provider: ${{ inputs.wl-id-provider }}
         service-account: ${{ inputs.service-account }}
