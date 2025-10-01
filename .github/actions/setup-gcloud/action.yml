@@ -15,8 +15,6 @@ inputs:
     required: true
     type: string
 
-outputs:
-
 runs:
   using: composite
   steps:
@@ -32,3 +30,7 @@ runs:
       uses: google-github-actions/setup-gcloud@v3
       with:
         install_components: beta
+  post:
+    name: Deauthenticate from Google Cloud
+    if: always()
+    run: gcloud auth revoke --all || echo "No credentials to revoke"
