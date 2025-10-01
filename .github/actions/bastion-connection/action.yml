@@ -38,10 +38,11 @@ runs:
         gcp-project-id: ${{ inputs.gcp-project-id }}
 
     - name: Install Bastion tunnel setup dependencies
-      run: |
-        apt-get update && apt-get install -y netcat-openbsd net-tools
+      shell: bash
+      run: apt-get update && apt-get install -y netcat-openbsd net-tools
 
     - name: Setup SSH tunnel to bastion
+      shell: bash
       run: |
         gcloud beta compute ssh bastion-830f7 \
           --project ${{ inputs.gcp-project-id }} \
