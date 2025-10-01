@@ -22,7 +22,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Dependencies
+    - name: Setup & Authenticate gCloud CLI
+      uses: ./.github/actions/setup-gcloud
+
+    - name: Install Bastion tunnel setup dependencies
       run: |
         apt-get update && apt-get install -y netcat-openbsd net-tools
 
@@ -42,8 +45,8 @@ runs:
         SSH_PID=$!
         echo "SSH_PID=$SSH_PID" >> $GITHUB_ENV
         
-        echo "Wait for tunnel to establish..."
+        echo "Waiting for tunnel to establish..."
         sleep 10
         
-        echo "Test if tunnel is working"
+        echo "Testing if bastion ssh tunnel is working"
         timeout 5 bash -c 'until nc -z localhost 5435; do sleep 1; done' && echo "Bastion Tunnel established"
