@@ -55,8 +55,8 @@ runs:
           --ssh-flag="-o" \
           --ssh-flag="UserKnownHostsFile=/dev/null" &
         
-        echo "Waiting for tunnel to establish..."
+        echo "\nWaiting for tunnel to establish...\n"
         sleep 10
         
-        echo "Testing if bastion ssh tunnel is working"
+        echo "\nTesting if bastion ssh tunnel is working\n"
         timeout 5 bash -c 'until nc -z localhost ${{ inputs.proxy-port }}; do sleep 1; done' && echo "Bastion Tunnel established"
