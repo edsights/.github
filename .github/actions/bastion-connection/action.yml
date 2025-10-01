@@ -6,6 +6,14 @@ inputs:
     description: GCP Project ID
     required: true
     type: string
+  wl-id-provider:
+    description: Workload Identity Provider
+    required: true
+    type: string
+  service-account:
+    description: GHA Service Account Email
+    required: true
+    type: string
   bastion-zone:
     description: GCP Bastion Zone
     default: us-central1-a
@@ -24,6 +32,10 @@ runs:
   steps:
     - name: Setup & Authenticate gCloud CLI
       uses: ./.github/actions/setup-gcloud
+      with:
+        wl-id-provider: ${{ inputs.wl-id-provider }}
+        service-account: ${{ inputs.service-account }}
+        gcp-project-id: ${{ inputs.gcp-project-id }}
 
     - name: Install Bastion tunnel setup dependencies
       run: |
@@ -35,18 +47,15 @@ runs:
           --project ${{ inputs.gcp-project-id }} \
           --zone ${{ inputs.bastion-zone }} \
           --ssh-flag="-NL" \
-          --ssh-flag="0.0.0.0:${{ env.proxy-port }}:${{ inputs.db-pvt-ip }}:5432" \
+          --ssh-flag="0.0.0.0:${{ inputs.proxy-port }}:${{ inputs.db-pvt-ip }}:5432" \
           --ssh-flag="-v" \
           --ssh-flag="-o" \
           --ssh-flag="StrictHostKeyChecking=no" \
           --ssh-flag="-o" \
           --ssh-flag="UserKnownHostsFile=/dev/null" &
-
-        SSH_PID=$!
-        echo "SSH_PID=$SSH_PID" >> $GITHUB_ENV
         
         echo "Waiting for tunnel to establish..."
         sleep 10
         
         echo "Testing if bastion ssh tunnel is working"
-        timeout 5 bash -c 'until nc -z localhost 5435; do sleep 1; done' && echo "Bastion Tunnel established"
+        timeout 5 bash -c 'until nc -z localhost ${{ inputs.proxy-port }}; do sleep 1; done' && echo "Bastion Tunnel established"
