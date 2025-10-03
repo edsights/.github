@@ -31,7 +31,7 @@ runs:
   using: composite
   steps:
     - name: Setup & Authenticate gCloud CLI
-      uses: edsights/.github/.github/actions/setup-gcloud
+      uses: edsights/.github/.github/actions/setup-gcloud@ENG-1052
       with:
         wl-id-provider: ${{ inputs.wl-id-provider }}
         service-account: ${{ inputs.service-account }}
@@ -54,9 +54,9 @@ runs:
           --ssh-flag="StrictHostKeyChecking=no" \
           --ssh-flag="-o" \
           --ssh-flag="UserKnownHostsFile=/dev/null" &
-        
+
         echo "\nWaiting for tunnel to establish...\n"
         sleep 10
-        
+
         echo "\nTesting if bastion ssh tunnel is working\n"
         timeout 5 bash -c 'until nc -z localhost ${{ inputs.proxy-port }}; do sleep 1; done' && echo "Bastion Tunnel established"
