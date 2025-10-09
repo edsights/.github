@@ -1,0 +1,62 @@
+name: Bastion Connection
+description: Setup a SSH tunnel to the Bastion host
+
+inputs:
+  gcp-project-id:
+    description: GCP Project ID
+    required: true
+    type: string
+  wl-id-provider:
+    description: Workload Identity Provider
+    required: true
+    type: string
+  service-account:
+    description: GHA Service Account Email
+    required: true
+    type: string
+  bastion-zone:
+    description: GCP Bastion Zone
+    default: us-central1-a
+    type: string
+  db-pvt-ip:
+    description: Private IP of the DB instance
+    required: true
+    type: string
+  proxy-port:
+    description: Local port to use for the proxy
+    default: 5435
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: Setup & Authenticate gCloud CLI
+      uses: edsights/.github/.github/actions/setup-gcloud
+      with:
+        wl-id-provider: ${{ inputs.wl-id-provider }}
+        service-account: ${{ inputs.service-account }}
+        gcp-project-id: ${{ inputs.gcp-project-id }}
+
+    - name: Install Bastion tunnel setup dependencies
+      shell: bash
+      run: apt-get update && apt-get install -y netcat-openbsd net-tools
+
+    - name: Setup SSH tunnel to bastion
+      shell: bash
+      run: |
+        gcloud beta compute ssh bastion-830f7 \
+          --project ${{ inputs.gcp-project-id }} \
+          --zone ${{ inputs.bastion-zone }} \
+          --ssh-flag="-NL" \
+          --ssh-flag="0.0.0.0:${{ inputs.proxy-port }}:${{ inputs.db-pvt-ip }}:5432" \
+          --ssh-flag="-v" \
+          --ssh-flag="-o" \
+          --ssh-flag="StrictHostKeyChecking=no" \
+          --ssh-flag="-o" \
+          --ssh-flag="UserKnownHostsFile=/dev/null" &
+
+        echo "\nWaiting for tunnel to establish...\n"
+        sleep 10
+
+        echo "\nTesting if bastion ssh tunnel is working\n"
+        timeout 5 bash -c 'until nc -z localhost ${{ inputs.proxy-port }}; do sleep 1; done' && echo "Bastion Tunnel established"
