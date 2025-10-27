@@ -1,84 +1,48 @@
-#### Briefly explain the purpose and context of this pull request
-
-
-- [ ] Have you checked if the README or Notion docs need to be updated?
-
-- [ ] Have you reviewed if tests need to be added/modified? If not, why?
-
-- [ ] Have you confirmed if environment variables need to be added/modified?
-
-
-
-#### Briefly explain the worst scenario that could happen from this pull request
-
-
 ## Summary
-
 > Briefly explain **why** this change exists and **what** it does.
-> Example: “Fixes duplicate tag removal by making the handler idempotent.”
-
----
-
-## Scope
-
-> Summarize the scope of the changes in this PR.
-
----
-
-## Implementation Notes
-
-> Mention any key design decisions, tradeoffs, or alternatives considered.
-> Keep this high-level (1–3 bullet points).
-
-- 
-
----
-
-## Testing
-
-> Explain how you verified correctness. Include any manual steps if relevant.
-
-- [ ] Unit tests
-- [ ] Integration / e2e tests
-- [ ] Manual verification
-  Steps to reproduce:
-  1. 
-  2. 
-  3. 
-
-> Have you confirmed this change in a deployed environment? If not, why?
-- [ ] Yes
-- [ ] No  Why not:
-
----
-
-## Risk & Rollout
-
-> Identify risk level and how you’ll release safely (flags, rollback, monitoring).
-
-| Field | Details |
-|-------|----------|
-| Risk level | ☐ Low ☐ Medium ☐ High |
-| Feature flag | ☐ Yes ☐ No |
-| DB / Migration impact |  |
-| Rollback plan |  |
-
----
 
 ## Related Work
-
 > Link related Notion issues or PRs.
 
----
+## Scope
+> Summarize if any changes are out of scope for this PR (as defined by the Linear issue).
 
-## Automation
+## Implementation Notes
+> Mention any key design decisions, tradeoffs, or alternatives considered.
 
+## Tests & Evidence
+- [ ] Have you reviewed if tests need to be added/modified? If not, why?
+- [ ] Have you confirmed this change in a deployed environment? If not, why?
+
+## Risk & Rollout
 - [ ] Have you requested a copilot review?
+- [ ] Do these code changes use a feature flag? If not, why?
+- [ ] Have you considered if documentation needs to be updated? (README, CLAUDE, Notion, etc.)
+- [ ] Is a DB migration required? If so, have you linked the migration PR?
+- [ ] Environment variables added/modified/necessary?
 
----
+### Briefly explain the worst scenario that could happen from this pull request and your rollback plan.
+> Explain here.
 
 **Reviewer quick guide**
-- [ ] CI green, scope clear, reasonable size (XS/S/M/L)
-- [ ] Risk & rollback noted
-- [ ] Tests + logs/metrics included
-- [ ] Code style consistent, naming clear
+Gate checks:
+- CI green
+- Scope clear
+- Linting/tests pass
+- PR template completed
+- PR size reasonable (XS/S/M/L)
+High level scan:
+- Read title/summary, screenshots, migration notes.
+- Confirm scope is tight and risk is declared (DB? feature flag?).
+- Skim the file list to spot surprises (renames, vendor files, huge diffs).
+- Rollout plan clear (flags/canary)? Observability added (metrics/logs)?
+- Migration steps & rollback documented? Ownership tagged?
+- If medium/high risk, require a second reviewer or a QA step.
+Design and behavior:
+- Do we agree with approach? Alternatives considered? Coupling ok?
+- Interfaces/contracts stable? Backward compatibility noted?
+- Security, privacy, performance implications acknowledged?
+Code details:
+- Read commit-by-commit or dependency-first (e.g., types/interfaces → impl → tests).
+- Check invariants, error handling, logging, edge cases, and test adequacy.
+- Suggest concrete, small changes (“nit/optional/blocking” tags).
