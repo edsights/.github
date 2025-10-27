@@ -24,8 +24,6 @@
 ### Briefly explain the worst scenario that could happen from this pull request and your rollback plan.
 > Explain here.
 
----
-
 ## Reviewer quick guide
 ### Gate checks:
 - CI green
