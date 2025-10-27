@@ -24,25 +24,27 @@
 ### Briefly explain the worst scenario that could happen from this pull request and your rollback plan.
 > Explain here.
 
-**Reviewer quick guide**
-Gate checks:
+---
+
+## Reviewer quick guide
+### Gate checks:
 - CI green
 - Scope clear
 - Linting/tests pass
 - PR template completed
 - PR size reasonable (XS/S/M/L)
-High level scan:
+### High level scan:
 - Read title/summary, screenshots, migration notes.
 - Confirm scope is tight and risk is declared (DB? feature flag?).
 - Skim the file list to spot surprises (renames, vendor files, huge diffs).
 - Rollout plan clear (flags/canary)? Observability added (metrics/logs)?
 - Migration steps & rollback documented? Ownership tagged?
 - If medium/high risk, require a second reviewer or a QA step.
-Design and behavior:
+### Design and behavior:
 - Do we agree with approach? Alternatives considered? Coupling ok?
 - Interfaces/contracts stable? Backward compatibility noted?
 - Security, privacy, performance implications acknowledged?
-Code details:
+### Code details:
 - Read commit-by-commit or dependency-first (e.g., types/interfaces → impl → tests).
 - Check invariants, error handling, logging, edge cases, and test adequacy.
 - Suggest concrete, small changes (“nit/optional/blocking” tags).
