@@ -36,9 +36,10 @@ jobs:
           IS_PULL_REQUEST: ${{ github.event.issue.pull_request }}
           PR_NUMBER: ${{ github.event.issue.number }}
         run: |
-          if [[ -z "$IS_PULL_REQUEST" ]]; then
+          if [[ "$IS_PULL_REQUEST" == "null" ]] || [[ -z "$IS_PULL_REQUEST" ]]; then
             echo "Comment is not on a pull request"
             echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "pr_number=" >> $GITHUB_OUTPUT
             exit 0
           fi
 
@@ -49,6 +50,7 @@ jobs:
           else
             echo "No deploy command found"
             echo "should_deploy=false" >> $GITHUB_OUTPUT
+            echo "pr_number=" >> $GITHUB_OUTPUT
           fi
 
       - name: Add reaction to comment
@@ -64,11 +66,18 @@ jobs:
             })
 
       - name: Get PR information
-        if: steps.check.outputs.should_deploy == 'true'
         id: pr-info
         uses: actions/github-script@v7
+        env:
+          SHOULD_DEPLOY: ${{ steps.check.outputs.should_deploy }}
         with:
           script: |
+            if (process.env.SHOULD_DEPLOY !== 'true') {
+              core.setOutput('ref', '');
+              core.setOutput('sha', '');
+              return;
+            }
+
             const pr = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
