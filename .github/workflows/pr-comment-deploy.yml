@@ -1,0 +1,78 @@
+name: PR Comment Deploy Setup
+
+on:
+  workflow_call:
+    outputs:
+      should_deploy:
+        description: 'Whether deployment should proceed'
+        value: ${{ jobs.check-comment.outputs.should_deploy }}
+      pr_ref:
+        description: 'The PR branch reference'
+        value: ${{ jobs.check-comment.outputs.pr_ref }}
+      pr_sha:
+        description: 'The PR head SHA'
+        value: ${{ jobs.check-comment.outputs.pr_sha }}
+      pr_number:
+        description: 'The PR number'
+        value: ${{ jobs.check-comment.outputs.pr_number }}
+
+jobs:
+  check-comment:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'issue_comment' && github.event.action == 'created'
+    permissions:
+      pull-requests: write
+      issues: write
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+      pr_ref: ${{ steps.pr-info.outputs.ref }}
+      pr_sha: ${{ steps.pr-info.outputs.sha }}
+      pr_number: ${{ steps.check.outputs.pr_number }}
+    steps:
+      - name: Check if comment is on PR with /deploy command
+        id: check
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          IS_PULL_REQUEST: ${{ github.event.issue.pull_request }}
+          PR_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          if [[ -z "$IS_PULL_REQUEST" ]]; then
+            echo "Comment is not on a pull request"
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          if [[ "$COMMENT_BODY" == "/deploy" ]] || [[ "$COMMENT_BODY" =~ ^/deploy[[:space:]] ]]; then
+            echo "Deploy command detected"
+            echo "should_deploy=true" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          else
+            echo "No deploy command found"
+            echo "should_deploy=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Add reaction to comment
+        if: steps.check.outputs.should_deploy == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            })
+
+      - name: Get PR information
+        if: steps.check.outputs.should_deploy == 'true'
+        id: pr-info
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('ref', pr.data.head.ref);
+            core.setOutput('sha', pr.data.head.sha);
