@@ -16,9 +16,11 @@
 - [ ] Have you reviewed if tests need to be added/modified? If not, why?
 - [ ] Have you confirmed this change in a deployed environment? If not, why?
 
+## Feature Flag
+- [ ] Do these code changes use a feature flag? If not, why?
+
 ## Risk & Rollout
 - [ ] Have you requested a copilot review?
-- [ ] Do these code changes use a feature flag? If not, why?
 - [ ] Have you considered if documentation needs to be updated? (README, CLAUDE, Notion, etc.)
 - [ ] Is a DB migration required? If so, have you linked the migration PR?
 - [ ] Environment variables added/modified/necessary?
