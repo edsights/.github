@@ -20,7 +20,7 @@
 
 - [ ] I have verified the happy path works as expected
 - [ ] I have tested relevant edge cases and error states
-- [ ] I have verified this change meets the acceptance criteria in the linked issue
+- [ ] I have verified this change meets all acceptance criteria in the linked issue, if applicable
 - [ ] I have confirmed no existing functionality is broken by this change
 
 **Steps to verify this change:**
