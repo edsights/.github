@@ -1,13 +1,20 @@
-#### Please add a brief description that explains the purpose of this pull request
+## Summary
+> Briefly explain **why** this change exists and **what** it does.
 
-- [ ] Have you linked the Linear issue?
+## Related Work
+> Link related Linear issues, Github PRs.
+> Linear: Resolves #xyz
+> Github: Depends on PR #abc
 
-- [ ] Have you checked if the README needs to be updated?
+## Scope
+> Summarize if any changes are out of scope for this PR (as defined by the Linear issue).
 
-- [ ] Did you write tests for this change? If not, why?
+## Implementation Notes
+> Mention any key design decisions, tradeoffs, or alternatives considered.
 
-- [ ] Does this change require environment variables to be added/modified?
-
+## Tests & Evidence
+- [ ] Have you reviewed if tests need to be added/modified? If not, why?
+- [ ] Have you confirmed this change in a deployed environment? If not, why?
 - [ ] Has this change been tested in a deployed environment? If not, why?
 
 #### Acceptance Testing
@@ -20,6 +27,38 @@
 **Steps to verify this change:**
 <!-- Provide clear steps a reviewer can follow to test this change -->
 
-1.
+1. 
+## Feature Flag
+- [ ] Do these code changes use a feature flag? If not, why?
 
-#### Please explain the worst scenario that could happen from this pull request?
+## Risk & Rollout
+- [ ] Have you requested a copilot review?
+- [ ] Have you considered if documentation needs to be updated? (README, CLAUDE, Notion, etc.)
+- [ ] Is a DB migration required? If so, have you linked the migration PR?
+- [ ] Environment variables added/modified/necessary?
+
+### Briefly explain the worst scenario that could happen from this pull request and your rollback plan.
+> Explain here.
+
+## Reviewer quick guide
+### Gate checks:
+- CI green
+- Scope clear
+- Linting/tests pass
+- PR template completed
+- PR size reasonable (XS/S/M/L)
+### High level scan:
+- Read title/summary, screenshots, migration notes.
+- Confirm scope is tight and risk is declared (DB? feature flag?).
+- Skim the file list to spot surprises (renames, vendor files, huge diffs).
+- Rollout plan clear (flags/canary)? Observability added (metrics/logs)?
+- Migration steps & rollback documented? Ownership tagged?
+- If medium/high risk, require a second reviewer or a QA step.
+### Design and behavior:
+- Do we agree with approach? Alternatives considered? Coupling ok?
+- Interfaces/contracts stable? Backward compatibility noted?
+- Security, privacy, performance implications acknowledged?
+### Code details:
+- Read commit-by-commit or dependency-first (e.g., types/interfaces → impl → tests).
+- Check invariants, error handling, logging, edge cases, and test adequacy.
+- Suggest concrete, small changes (“nit/optional/blocking” tags).

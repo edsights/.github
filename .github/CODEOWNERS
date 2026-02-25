@@ -1,0 +1,6 @@
+# Purpose:
+#   This file defines the code ownership and review responsibilities for the repository.
+#   Owners listed here are automatically requested for review on pull requests that modify files they own.
+#
+# File patterns are followed by one or more GitHub usernames or teams.
+* @andrewjao-edsights @ChuckLangford @hconrad @johnrhampton

@@ -1,0 +1,74 @@
+name: PR Comment Deploy Setup
+
+on:
+  workflow_call:
+    outputs:
+      should_deploy:
+        description: 'Whether deployment should proceed'
+        value: ${{ jobs.check-comment.outputs.should_deploy }}
+      pr_ref:
+        description: 'The PR branch reference'
+        value: ${{ jobs.check-comment.outputs.pr_ref }}
+      pr_sha:
+        description: 'The PR head SHA'
+        value: ${{ jobs.check-comment.outputs.pr_sha }}
+      pr_number:
+        description: 'The PR number'
+        value: ${{ jobs.check-comment.outputs.pr_number }}
+
+jobs:
+  check-comment:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issue_comment' &&
+      github.event.action == 'created' &&
+      github.event.issue.pull_request != null &&
+      (github.event.comment.body == '/deploy' || startsWith(github.event.comment.body, '/deploy '))
+    permissions:
+      pull-requests: write
+      issues: write
+    outputs:
+      should_deploy: ${{ steps.check.outputs.should_deploy }}
+      pr_ref: ${{ steps.pr-info.outputs.ref }}
+      pr_sha: ${{ steps.pr-info.outputs.sha }}
+      pr_number: ${{ steps.check.outputs.pr_number }}
+    steps:
+      - name: Set deployment outputs
+        id: check
+        run: |
+          echo "Deploy command detected on PR"
+          echo "should_deploy=true" >> $GITHUB_OUTPUT
+          echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+
+      - name: Add reaction to comment
+        if: steps.check.outputs.should_deploy == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            })
+
+      - name: Get PR information
+        id: pr-info
+        uses: actions/github-script@v7
+        env:
+          SHOULD_DEPLOY: ${{ steps.check.outputs.should_deploy }}
+        with:
+          script: |
+            if (process.env.SHOULD_DEPLOY !== 'true') {
+              core.setOutput('ref', '');
+              core.setOutput('sha', '');
+              return;
+            }
+
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            core.setOutput('ref', pr.data.head.ref);
+            core.setOutput('sha', pr.data.head.sha);
