@@ -16,6 +16,18 @@
 - [ ] Have you reviewed if tests need to be added/modified? If not, why?
 - [ ] Have you confirmed this change in a deployed environment? If not, why?
 
+#### Acceptance Testing
+
+- [ ] I have verified the happy path works as expected
+- [ ] I have tested relevant edge cases and error states
+- [ ] I have verified this change meets all acceptance criteria in the linked issue, if applicable
+- [ ] I have confirmed no existing functionality is broken by this change
+
+**Steps to verify this change:**
+<!-- Provide clear steps a reviewer can follow to test this change -->
+
+1.
+
 ## Feature Flag
 - [ ] Do these code changes use a feature flag? If not, why?
 
