@@ -6,6 +6,9 @@
 > Linear: Resolves #xyz
 > Github: Depends on PR #abc
 
+- [ ] Are these code changes linked to a Linear issue? If not, why?
+
+
 ## Scope
 > Summarize if any changes are out of scope for this PR (as defined by the Linear issue).
 
