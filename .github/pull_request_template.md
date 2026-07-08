@@ -34,7 +34,6 @@
 - [ ] Do these code changes use a feature flag? If not, why?
 
 ## Risk & Rollout
-- [ ] Have you requested a copilot review?
 - [ ] Have you considered if documentation needs to be updated? (README, CLAUDE, Notion, etc.)
 - [ ] Is a DB migration required? If so, have you linked the migration PR?
 - [ ] Environment variables added/modified/necessary?
