@@ -38,12 +38,11 @@ jobs:
       - name: Set deployment outputs
         id: check
         env:
-          # Never interpolate the body into the script directly - it is attacker-controlled.
           COMMENT_BODY: ${{ github.event.comment.body }}
           PR_NUMBER: ${{ github.event.issue.number }}
         run: |
           # GitHub's web UI appends CRLF, so `/deploy` typed in the browser arrives as
-          # "/deploy\r\n". Normalise before matching: drop CRs, keep the first line, then
+          # "/deploy\r\n". Normalize before matching: drop CRs, keep the first line, then
           # strip surrounding whitespace.
           deploy_command=$(printf '%s' "$COMMENT_BODY" \
             | tr -d '\r' \
