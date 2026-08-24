@@ -42,12 +42,14 @@ jobs:
           PR_NUMBER: ${{ github.event.issue.number }}
         run: |
           # GitHub's web UI appends CRLF, so `/deploy` typed in the browser arrives as
-          # "/deploy\r\n". Normalize before matching: drop CRs, keep the first line, then
-          # strip surrounding whitespace.
+          # "/deploy\r\n". Normalize before matching: drop CRs, keep the first line,
+          # lowercase (the job-level `startsWith` above is case-insensitive, so `/Deploy`
+          # from a mobile keyboard must match here too), then strip surrounding whitespace.
           deploy_command=$(printf '%s' "$COMMENT_BODY" \
             | tr -d '\r' \
             | head -n 1 \
             | tr '\t' ' ' \
+            | tr '[:upper:]' '[:lower:]' \
             | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
 
           # Accept `/deploy` and `/deploy <args>`, but not `/deployment-notes`.
