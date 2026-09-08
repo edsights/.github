@@ -1,0 +1,25 @@
+name: CI
+
+# The reusable workflows in this repo are consumed at @main by other repos with
+# no version pinning, so regressions land everywhere immediately. This is the
+# only workflow that runs on this repo's own PRs.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v7
+        with:
+          # Nothing after checkout talks to GitHub; don't leave the token in
+          # the local git config.
+          persist-credentials: false
+      # Runner-preinstalled Node (20+) has node:test built in; no dependencies.
+      - run: node --test tests/*.test.mjs

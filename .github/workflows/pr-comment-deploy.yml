@@ -19,11 +19,13 @@ on:
 jobs:
   check-comment:
     runs-on: ubuntu-latest
+    # Cheap pre-filter only, so we don't spin a runner for every comment. Expressions
+    # have no trim(), so exact matching happens in the `check` step below.
     if: |
       github.event_name == 'issue_comment' &&
       github.event.action == 'created' &&
       github.event.issue.pull_request != null &&
-      (github.event.comment.body == '/deploy' || startsWith(github.event.comment.body, '/deploy '))
+      startsWith(github.event.comment.body, '/deploy')
     permissions:
       pull-requests: write
       issues: write
@@ -35,10 +37,31 @@ jobs:
     steps:
       - name: Set deployment outputs
         id: check
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          PR_NUMBER: ${{ github.event.issue.number }}
         run: |
-          echo "Deploy command detected on PR"
-          echo "should_deploy=true" >> $GITHUB_OUTPUT
-          echo "pr_number=${{ github.event.issue.number }}" >> $GITHUB_OUTPUT
+          # GitHub's web UI appends CRLF, so `/deploy` typed in the browser arrives as
+          # "/deploy\r\n". Normalize before matching: drop CRs, keep the first line,
+          # lowercase (the job-level `startsWith` above is case-insensitive, so `/Deploy`
+          # from a mobile keyboard must match here too), then strip surrounding whitespace.
+          deploy_command=$(printf '%s' "$COMMENT_BODY" \
+            | tr -d '\r' \
+            | head -n 1 \
+            | tr '\t' ' ' \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+
+          # Accept `/deploy` and `/deploy <args>`, but not `/deployment-notes`.
+          if [ "$deploy_command" = "/deploy" ] || [ "${deploy_command#/deploy }" != "$deploy_command" ]; then
+            echo "Deploy command detected on PR #${PR_NUMBER}"
+            echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Not a deploy command, skipping deploy: '${deploy_command}'"
+            echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "pr_number=${PR_NUMBER}" >> "$GITHUB_OUTPUT"
 
       - name: Add reaction to comment
         if: steps.check.outputs.should_deploy == 'true'
